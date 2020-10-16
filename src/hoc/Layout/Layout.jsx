@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
-import classes from './Layout.module.css'
-
 
 class Layout extends Component {
   render() {
     return(
-      <div className={classes.Layout}>
+      // Це корріний дів проекту
+      <div>
         <main>
+          {/* Тут буде весь контент */}
           {this.props.children}
         </main>
       </div>
@@ -14,4 +14,4 @@ class Layout extends Component {
   }
 }
 
-export default Layout;
+export default Layout
