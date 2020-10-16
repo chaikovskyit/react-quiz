@@ -1,25 +1,26 @@
 import React from 'react'
 import classes from './ActiveQuiz.module.css'
+import AnswersList from './AnswersList/AnswersList'
 
-const ActiveQuiz = (props) =>  (
-  <div className={classes.ActiveQuiz}>
+
+const ActiveQuiz = (props) => {
+  return (
+    <div className={classes.ActiveQuiz}>
     {/* тег р відповідає за питання */}
     <p className={classes.Question}>
       <span>
         {/* Порядковий номер питання */}
         <strong>1.</strong>&nbsp;
-        Хто такий Дарт Вейдер?
+        <strong>Хто такий Дарт Вейдер?</strong>
       </span>
       {/* порядковий номер запитання 2/10 */}
       <small>4 з 12</small>
     </p>
-    <ul>
-      <li>1</li>
-      <li>2</li>
-      <li>3</li>
-      <li>4</li>
-    </ul>
+    <AnswersList
+      answers={props.answers}
+    />
   </div>
-)
+  )
+}
 
 export default ActiveQuiz
