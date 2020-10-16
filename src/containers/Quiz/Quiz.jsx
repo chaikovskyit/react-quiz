@@ -7,15 +7,22 @@ class Quiz extends Component {
   state = {
     quiz: [
       {
+        question: 'Що таке ReactJS',
+        rightAnswerId: 2,
         answers: [
-          {text: 'Чувак'},
-          {text: 'Програмер'},
-          {text: 'Герой'},
-          {text: 'Супер Герой'}
+          {text: 'Framework', id: 1},
+          {text: 'Бібліотека', id: 2},
+          {text: 'Мова програмування', id: 3},
+          {text: 'Супер Герой', id: 4}
         ]
       }
     ]
   }
+
+  onAnswerClickHandler = (answerId) => {
+    console.log('Answer id:', answerId);
+  }
+
   render() {
     return (
       <div className={classes.Quiz}>
@@ -23,6 +30,8 @@ class Quiz extends Component {
           <h1>Дайте відповідь на запитання</h1>
           <ActiveQuiz 
             answers={this.state.quiz[0].answers}
+            question={this.state.quiz[0].question}
+            onAnswerClick={this.onAnswerClickHandler}
           />
         </div>
       </div>

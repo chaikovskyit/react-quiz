@@ -11,13 +11,14 @@ const ActiveQuiz = (props) => {
       <span>
         {/* Порядковий номер питання */}
         <strong>1.</strong>&nbsp;
-        <strong>Хто такий Дарт Вейдер?</strong>
+        {props.question}
       </span>
       {/* порядковий номер запитання 2/10 */}
       <small>4 з 12</small>
     </p>
     <AnswersList
       answers={props.answers}
+      onAnswerClick={props.onAnswerClick}
     />
   </div>
   )
