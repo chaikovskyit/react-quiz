@@ -7,8 +7,11 @@ class Quiz extends Component {
   state = {
     quiz: [
       {
+        // Питання 
         question: 'Що таке ReactJS',
+        // id правельної відповіді
         rightAnswerId: 2,
+        // Тестові варіанти відповідей з id для зручності маніпуляцій з ними
         answers: [
           {text: 'Framework', id: 1},
           {text: 'Бібліотека', id: 2},
@@ -18,7 +21,7 @@ class Quiz extends Component {
       }
     ]
   }
-
+  // Функція яка виводить в консолі id елементу зі списку варіантів по якому був зроблений клік
   onAnswerClickHandler = (answerId) => {
     console.log('Answer id:', answerId);
   }
