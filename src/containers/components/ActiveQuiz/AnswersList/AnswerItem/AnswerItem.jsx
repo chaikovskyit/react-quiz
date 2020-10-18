@@ -5,6 +5,7 @@ import classes from './AnswerItem.module.css'
 const AnswerItem = (props) => {
   return(
     <li className={classes.AnswerItem}
+      // Функція яка повертає id варіанта відповіді
       onClick={() => props.onAnswerClick(props.answer.id)}
     >
       {/* тут лежить  */}
