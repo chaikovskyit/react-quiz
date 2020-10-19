@@ -6,6 +6,7 @@ import FinishedQuiz from '../components/FinishedQuiz/FinishedQuiz'
 
 class Quiz extends Component {
   state = {
+    // Відповідає за поточний стан вікторини. За замовчуванням це false тобто вона не завершена, а коли буде дано відповідь на останнє запитання значення isFinished зміниться на true.
     isFinished: true,
     // Поточний номер запитання 
     activeQuestion: 0,
@@ -62,6 +63,7 @@ class Quiz extends Component {
       })
       const timeout = window.setTimeout(() => {
         if(this.isQuizFinished()) {
+          // коли вікторина завершена значення в state змінюється на true
           this.setState({
             isFinished: true
           })
@@ -80,7 +82,6 @@ class Quiz extends Component {
       })
     }
   }
-
   isQuizFinished() {
     return this.state.activeQuestion + 1 === this.state.quiz.length
   }
@@ -91,6 +92,7 @@ class Quiz extends Component {
         <div className={classes.QuizWrapper}>
           <h1>Дайте відповідь на запитання</h1>
 
+          {/* Відповідно до значення state залежить те який компонент ми будемо рендерити, по дефолту ми рендиремо ActiveQuiz, а коли значення в state змінюється на true ми рендиремо FinishedQuiz */}
           {
             this.state.isFinished
             ? <FinishedQuiz 
@@ -107,7 +109,6 @@ class Quiz extends Component {
                 state={this.state.answerState}
               />
           }
-
         </div>
       </div>
     )
