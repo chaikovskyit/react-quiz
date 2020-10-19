@@ -10,12 +10,12 @@ const ActiveQuiz = (props) => {
     <p className={classes.Question}>
       <span>
         {/* Порядковий номер питання */}
-        <strong>1.</strong>&nbsp;
+        <strong>{props.answerNumber}.</strong>&nbsp;
         {/* тут лежить питання */}
         {props.question}
       </span>
-      {/* порядковий номер запитання 2/10 */}
-      <small>4 з 12</small>
+      {/* порядковий номер запитання та довжинна масиву з запитань */}
+        <small>{props.answerNumber} з {props.quizLength}</small>
     </p>
     <AnswersList
       // тут лежать варіанти відповідей
