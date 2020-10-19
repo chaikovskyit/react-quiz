@@ -18,6 +18,7 @@ const ActiveQuiz = (props) => {
         <small>{props.answerNumber} з {props.quizLength}</small>
     </p>
     <AnswersList
+      state={props.state}
       // тут лежать варіанти відповідей
       answers={props.answers}
       onAnswerClick={props.onAnswerClick}

@@ -7,6 +7,8 @@ class Quiz extends Component {
   state = {
     // Поточний номер запитання 
     activeQuestion: 0,
+    // Зберігає інформацію про поточний клік користувача(відповідь або правильна або неправильна {[id]: 'success' 'error'}  )
+    answerState: null,
     quiz: [
       {
         // Питання 
@@ -43,10 +45,34 @@ class Quiz extends Component {
   // Функція яка виводить в консолі id елементу зі списку варіантів по якому був зроблений клік, її передаємо через пропси в сам низ до елементу AnswerItem де вона і викликається.
   onAnswerClickHandler = (answerId) => {
     console.log('Answer id:', answerId);
-    // При кліку змінюємо activeQuestion
-    this.setState({
-      activeQuestion: this.state.activeQuestion +1
-    })
+    // Тут лежить питання
+    const question = this.state.quiz[this.state.activeQuestion]
+    // Тут ми перевіряємо чи правильно ми відповіли на запитання
+    if(question.rightAnswerId === answerId) {
+      this.setState({
+        answerState: {[answerId]: 'success'}
+      })
+      const timeout = window.setTimeout(() => {
+        if(this.isQuizFinished()) {
+          console.log('finished');
+        } else {
+          // При кліку змінюємо activeQuestion якшо відповідь правильна
+          this.setState({
+            activeQuestion: this.state.activeQuestion +1,
+            answerState: null
+          })
+        }
+        window.clearTimeout(timeout)
+      }, 1000)
+    } else {
+      this.setState({
+        answerState: {[answerId]: 'error'}
+      })
+    }
+  }
+
+  isQuizFinished() {
+    return this.state.activeQuestion + 1 === this.state.quiz.length
   }
 
   render() {
@@ -62,6 +88,7 @@ class Quiz extends Component {
             quizLength={this.state.quiz.length}
             // Параметр який відповідає за номер поточного запитання
             answerNumber={this.state.activeQuestion + 1}
+            state={this.state.answerState}
           />
         </div>
       </div>

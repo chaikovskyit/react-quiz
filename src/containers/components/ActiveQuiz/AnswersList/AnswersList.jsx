@@ -16,6 +16,7 @@ const AnswersList = (props) => {
             answer={answer}
             // функція кліку
             onAnswerClick={props.onAnswerClick}
+            state={props.state ? props.state[answer.id] : null}
           />
         )
       })}
