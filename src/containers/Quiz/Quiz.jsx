@@ -45,6 +45,12 @@ class Quiz extends Component {
   // Функція яка виводить в консолі id елементу зі списку варіантів по якому був зроблений клік, її передаємо через пропси в сам низ до елементу AnswerItem де вона і викликається.
   onAnswerClickHandler = (answerId) => {
     console.log('Answer id:', answerId);
+    if(this.state.answerState) {
+      const key = Object.keys(this.state.answerState)[0]
+      if(this.state.answerState[key] === 'success'){
+        return 
+      }
+    }
     // Тут лежить питання
     const question = this.state.quiz[this.state.activeQuestion]
     // Тут ми перевіряємо чи правильно ми відповіли на запитання
