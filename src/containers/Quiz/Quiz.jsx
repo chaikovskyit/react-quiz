@@ -1,10 +1,12 @@
 import React, {Component} from 'react'
 import ActiveQuiz from '../components/ActiveQuiz/ActiveQuiz'
 import classes from './Quiz.module.css'
+import FinishedQuiz from '../components/FinishedQuiz/FinishedQuiz'
 
 
 class Quiz extends Component {
   state = {
+    isFinished: true,
     // Поточний номер запитання 
     activeQuestion: 0,
     // Зберігає інформацію про поточний клік користувача(відповідь або правильна або неправильна {[id]: 'success' 'error'}  )
@@ -60,7 +62,9 @@ class Quiz extends Component {
       })
       const timeout = window.setTimeout(() => {
         if(this.isQuizFinished()) {
-          console.log('finished');
+          this.setState({
+            isFinished: true
+          })
         } else {
           // При кліку змінюємо activeQuestion якшо відповідь правильна
           this.setState({
@@ -86,16 +90,24 @@ class Quiz extends Component {
       <div className={classes.Quiz}>
         <div className={classes.QuizWrapper}>
           <h1>Дайте відповідь на запитання</h1>
-          <ActiveQuiz 
-            answers={this.state.quiz[this.state.activeQuestion].answers}
-            question={this.state.quiz[this.state.activeQuestion].question}
-            onAnswerClick={this.onAnswerClickHandler}
-            // Параметр який відповідає загальну кількість запитаня
-            quizLength={this.state.quiz.length}
-            // Параметр який відповідає за номер поточного запитання
-            answerNumber={this.state.activeQuestion + 1}
-            state={this.state.answerState}
-          />
+
+          {
+            this.state.isFinished
+            ? <FinishedQuiz 
+
+              />
+            : <ActiveQuiz 
+                answers={this.state.quiz[this.state.activeQuestion].answers}
+                question={this.state.quiz[this.state.activeQuestion].question}
+                onAnswerClick={this.onAnswerClickHandler}
+                // Параметр який відповідає загальну кількість запитаня
+                quizLength={this.state.quiz.length}
+                // Параметр який відповідає за номер поточного запитання
+                answerNumber={this.state.activeQuestion + 1}
+                state={this.state.answerState}
+              />
+          }
+
         </div>
       </div>
     )
