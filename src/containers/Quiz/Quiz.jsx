@@ -6,8 +6,11 @@ import FinishedQuiz from '../components/FinishedQuiz/FinishedQuiz'
 
 class Quiz extends Component {
   state = {
+    //обєкт в якому збираються результати відповідей на запитання
+          // { [id]: 'success' or 'error' }
+    results: {},
     // Відповідає за поточний стан вікторини. За замовчуванням це false тобто вона не завершена, а коли буде дано відповідь на останнє запитання значення isFinished зміниться на true.
-    isFinished: true,
+    isFinished: false,
     // Поточний номер запитання 
     activeQuestion: 0,
     // Зберігає інформацію про поточний клік користувача(відповідь або правильна або неправильна {[id]: 'success' 'error'}  )
@@ -39,7 +42,7 @@ class Quiz extends Component {
         answers: [
           {text: 'Супер герой', id: 1},
           {text: 'Yoda', id: 2},
-          {text: 'Люк Скай Вокер', id: 3},
+          {text: 'Енакен Скай Вокер', id: 3},
           {text: 'Палпатін', id: 4}
         ]
       }
@@ -54,12 +57,21 @@ class Quiz extends Component {
         return 
       }
     }
+
     // Тут лежить питання
     const question = this.state.quiz[this.state.activeQuestion]
+    const results = this.state.results
+
     // Тут ми перевіряємо чи правильно ми відповіли на запитання
     if(question.rightAnswerId === answerId) {
+      // якщо відповідь правильна то results буде дорівнювати 'success'
+      if(!results[question.id]) {
+        results[question.id] = 'success'
+      }
       this.setState({
-        answerState: {[answerId]: 'success'}
+        answerState: {[answerId]: 'success'},
+        //// В обєкт results додаємо значення зміної results в даному випадку 'success', тобто змінюємо state
+        results: results
       })
       const timeout = window.setTimeout(() => {
         if(this.isQuizFinished()) {
@@ -77,13 +89,27 @@ class Quiz extends Component {
         window.clearTimeout(timeout)
       }, 1000)
     } else {
+      // якщо відповідь не правильна, змінній results присвоюється значення 'error'
+      results[question.id] = 'error'
       this.setState({
-        answerState: {[answerId]: 'error'}
+        answerState: {[answerId]: 'error'},
+        // В обєкт results додаємо значення зміної results в даному випадку 'error', тобто змінюємо state
+        results: results
+        
       })
     }
   }
   isQuizFinished() {
     return this.state.activeQuestion + 1 === this.state.quiz.length
+  }
+
+  retryHandler = () => {
+    this.setState({
+      activeQuestion: 0,
+      answerState: null,
+      isFinished: false,
+      results: {},
+    })
   }
 
   render() {
@@ -96,7 +122,10 @@ class Quiz extends Component {
           {
             this.state.isFinished
             ? <FinishedQuiz 
-
+                // передаємо компонетну значення result яке лежить в state
+                results={this.state.results}
+                quiz={this.state.quiz}
+                onRetry={this.retryHandler}
               />
             : <ActiveQuiz 
                 answers={this.state.quiz[this.state.activeQuestion].answers}
