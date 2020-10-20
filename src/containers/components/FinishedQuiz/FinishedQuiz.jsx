@@ -1,5 +1,6 @@
 import React from 'react'
 import classes from './FinishedQuiz.module.css'
+import Button from '../UI/Button/Button'
 
 // В пропсах ми отримуємо два параметри, result і quiz
 const FinishedQuiz = (props) => {
@@ -40,7 +41,8 @@ const FinishedQuiz = (props) => {
       <p>Правильно {successCount}  з {props.quiz.length}</p>
       <div>
         {/* відповідає за повторне проходження вікторини */}
-        <button onClick={props.onRetry}>Повторити</button>
+        <Button onClick={props.onRetry} type="primary">Повторити</Button>
+        <Button onClick={props.onRetry} type="success">Перейти в список тестів</Button>
       </div>
     </div>
   )
