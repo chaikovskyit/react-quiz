@@ -7,7 +7,7 @@ import FinishedQuiz from '../components/FinishedQuiz/FinishedQuiz'
 class Quiz extends Component {
   state = {
     //обєкт в якому збираються результати відповідей на запитання
-          // { [id]: 'success' or 'error' }
+    // { [id]: 'success' or 'error' }
     results: {},
     // Відповідає за поточний стан вікторини. За замовчуванням це false тобто вона не завершена, а коли буде дано відповідь на останнє запитання значення isFinished зміниться на true.
     isFinished: false,
@@ -102,7 +102,7 @@ class Quiz extends Component {
   isQuizFinished() {
     return this.state.activeQuestion + 1 === this.state.quiz.length
   }
-
+  // Функція яка повертає вікторину в початкове значення, тобто обнулює всі показники і ми можемо проходити вікторину заново. Обнуляємо state
   retryHandler = () => {
     this.setState({
       activeQuestion: 0,
@@ -125,6 +125,7 @@ class Quiz extends Component {
                 // передаємо компонетну значення result яке лежить в state
                 results={this.state.results}
                 quiz={this.state.quiz}
+                // Викликаємо функцію пройти вікторину заново
                 onRetry={this.retryHandler}
               />
             : <ActiveQuiz 
