@@ -1,10 +1,12 @@
 .MenuToggle {
 	position: fixed;
+	/* відступи */
 	top: 40px;
 	left: 40px;
-	font-style: 20px;
+	font-size: 20px;
 	cursor: pointer;
 	color: #fff;
+	/* поверх інших елементів */
 	z-index: 100;
 	transition: opacity, left 0.22s ease-in;
 }
@@ -12,7 +14,7 @@
 .MenuToggle:hover {
 	opacity: 0.7;
 }
-
+/* Ширина меню буде 320px */
 .MenuToggle.open {
 	left: 320px;
 }

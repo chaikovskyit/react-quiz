@@ -6,17 +6,19 @@ import Drawer from '../../containers/components/Navigation/Drawer/Drawer'
 
 
 class Layout extends Component {
-
+  // стейт який відповідає за наше меню, по замовчуванні ми його не показуємо 
   state = {
     menu: false,
   }
 
+  //Функція яка змінює стейт тобто відкриває меню(викликається в компоненті MenuToggle)
   toggleMenuHandler = () => {
     this.setState({
       menu: !this.state.menu
     })
   }
 
+  
   menuCloseHandler = () => {
     this.setState({
       menu: false
@@ -32,6 +34,7 @@ class Layout extends Component {
           onClose={this.menuCloseHandler}
         />
         <MenuToggle 
+          // викликаємо меню
           onToggle={this.toggleMenuHandler}
           isOpen={this.state.menu}
         />

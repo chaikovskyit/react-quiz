@@ -5,6 +5,7 @@
 	border: 1px solid #ccc;
 	color: #fff;
 	margin-right: 15px;
+	/* текст у верхньому регістрі */
 	text-transform: uppercase;
 	font-weight: bold;
 	font-style: 12px;
@@ -15,12 +16,14 @@
 }
 
 .Button:active {
+	/* задає тінь в середину */
 	box-shadow: inset 2px 2px 1px rgba(0, 0, 0, 0.3);
 }
 
 .Button:disabled {
 	background: #ccc;
 	color: #fff;
+	/* курср заборн */
 	cursor: not-allowed;
 }
 
