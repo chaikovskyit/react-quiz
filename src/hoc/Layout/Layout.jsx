@@ -31,6 +31,7 @@ class Layout extends Component {
       <div className={classes.Layout}>
         <Drawer 
           isOpen={this.state.menu}
+          // передаємо параметр який буде закривати наше меню
           onClose={this.menuCloseHandler}
         />
         <MenuToggle 

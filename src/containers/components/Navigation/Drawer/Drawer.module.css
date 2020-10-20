@@ -1,5 +1,6 @@
 .Drawer {
 	position: fixed;
+	/* займатиме всю висоту екрану */
 	left: 0;
 	top: 0;
 	bottom: 0;
@@ -7,13 +8,15 @@
 	max-width: 300px;
 	padding: 20px 10px;
 	box-sizing: border-box;
-	background: #fff;
+	background: rgb(243, 218, 76);
+	/* переміщаємо по осі х */
 	transform: translateX(0px);
 	transition: transform 0.22s ease-in;
 	z-index: 90;
 }
 
 .Drawer.close {
+	/* переміщаємо по осі х назад тобто закриваємо */
 	transform: translateX(-300px);
 }
 
@@ -35,6 +38,7 @@
 	position: relative;
 	padding: 0 20px 10px 20px;
 	transition: opacity 0.3s;
+	cursor: pointer;
 }
 
 .Drawer ul li a:hover,
