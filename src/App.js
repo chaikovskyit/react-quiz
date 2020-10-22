@@ -10,7 +10,7 @@ class App extends Component {
   render() {
     return (
       <Layout>
-      {/* Тут буде складено увесь наш роутинг */}
+      {/* Тут буде складено увесь наш роутинг, а компонент Switch дозволяє завантажувати лише один потрібний Route */}
         <Switch>
           <Route path="/auth" component={Auth} />
           <Route path="/quiz-creator" component={QuizCreator} />
