@@ -2,6 +2,7 @@ import React from 'react'
 import classes from './FinishedQuiz.module.css'
 // імпортуємо створену кнопку
 import Button from '../UI/Button/Button'
+import {Link} from 'react-router-dom'
 
 // В пропсах ми отримуємо два параметри, result і quiz
 const FinishedQuiz = (props) => {
@@ -44,7 +45,10 @@ const FinishedQuiz = (props) => {
         {/* відповідає за повторне проходження вікторини */}
         <Button onClick={props.onRetry} type="primary">Повторити</Button>
         {/* відповідає за перехід в список вікторин*/}
-        <Button onClick={props.onRetry} type="success">Перейти в список тестів</Button>
+        <Link to='/'>
+          <Button onClick={props.onRetry} type="success">Перейти в список тестів</Button>
+        </Link>
+        
       </div>
     </div>
   )
