@@ -7,17 +7,29 @@ import Input from '../components/UI/Input/Input'
 
 class Auth extends Component {
 
-  state = {
+  state = { 
+    // для зручнішого маніпулювання огорнемо наші обєкти у змінну formControls 
     formControls: {
+      // такий собі controlName
       email: {
+        // значення по замовчуванні, тобто пусте поле
         value: '',
+        // тип даних
         type: 'email',
+        // лейбл з індивідуальним id
         label: 'Email',
+        // Звідси починаються валідаційні параметри
+        // повідомлення яке відображається в <span/> у разі не валідного заповнення поля вводу
         errorMessage: 'Введіть коректний email',
+        // Стан валідності поля, по замовчуванню ні, так як значення value порожнє, але так просто залишити не вийде, бо буде помилка, для цього ми передаємо ще один параметр touched про який детальніше нижче
         valid: false,
+        // відповідає за те чи відбувалось щось у полі вводу
         touched: false,
+        // правила по котрих ми валідуємо компонент <Input />, в нашому випадку їх буде 2, це поле Email та Password 
         validation: {
+          // відповідає за те що поле не може бути відправлене тобто submit порожнім
           required: true,
+          // відповідає за те що тип правильний
           email: true
         }
       },
@@ -29,7 +41,9 @@ class Auth extends Component {
         valid: false,
         touched: false,
         validation: {
+          // відповідає за те що поле не може бути відправлене тобто submit порожнім
           required: true,
+          // відповідає за те що довжина паролю не може бути коротшою за 6 символів
           minLength: 6
         }
 
@@ -53,12 +67,14 @@ class Auth extends Component {
     console.log(`${controlName}: `, event.target.value);
   }
 
+  // Функція яка рендерить компоненти <Input /> за допомогою методу map(), та передає в неї параметри
   renderInputs () {
     return Object.keys(this.state.formControls).map((controlName, index) => {
       const control = this.state.formControls[controlName]
       return (
         <Input
-          key={controlName + index}
+          // ітератор
+          key={control + index}
           type={control.type}
           value={control.value}
           valid={control.valid}
@@ -66,6 +82,7 @@ class Auth extends Component {
           label={control.label}
           shouldValidate={!!control.validation}
           errorMessage={control.errorMessage}
+          // відповідає за зміну в полі вводу, приймає два параметри, подію і controlName який отримує з методу map() тобто це або email або password
           onChange={event => this.onChangeHandler(event, controlName)}
         >
         
