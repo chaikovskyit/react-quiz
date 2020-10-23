@@ -7,6 +7,36 @@ import Input from '../components/UI/Input/Input'
 
 class Auth extends Component {
 
+  state = {
+    formControls: {
+      email: {
+        value: '',
+        type: 'email',
+        label: 'Email',
+        errorMessage: 'Введіть коректний email',
+        valid: false,
+        touched: false,
+        validation: {
+          required: true,
+          email: true
+        }
+      },
+      password: {
+        value: '',
+        type: 'password',
+        label: 'Password',
+        errorMessage: 'Введіть коректний пароль',
+        valid: false,
+        touched: false,
+        validation: {
+          required: true,
+          minLength: 6
+        }
+
+      }
+    }
+  }
+
   loginHandler = () => {
 
   }
@@ -19,6 +49,31 @@ class Auth extends Component {
     event.preventDefault()
   }
 
+  onChangeHandler = (event, controlName) => {
+    console.log(`${controlName}: `, event.target.value);
+  }
+
+  renderInputs () {
+    return Object.keys(this.state.formControls).map((controlName, index) => {
+      const control = this.state.formControls[controlName]
+      return (
+        <Input
+          key={controlName + index}
+          type={control.type}
+          value={control.value}
+          valid={control.valid}
+          touched={control.touched}
+          label={control.label}
+          shouldValidate={!!control.validation}
+          errorMessage={control.errorMessage}
+          onChange={event => this.onChangeHandler(event, controlName)}
+        >
+        
+        </Input>
+      )
+    })
+  }
+
   render(){
     return(
       // Дів для центрування контенту
@@ -27,14 +82,7 @@ class Auth extends Component {
           <h1>Авторизація</h1>
           {/* Форма для залогінення і сьворення акаунтів */}
           <form onSubmit={this.submitHandler} className={classes.AuthForm}>
-            <Input 
-              label="Email"
-            />
-
-            <Input 
-              label="Password"
-              errorMessage={'test'}
-            />
+            {this.renderInputs()}
             <Button 
               type="success"
               // Функція логінізації яка викликатиметься при кліку на кнопку
