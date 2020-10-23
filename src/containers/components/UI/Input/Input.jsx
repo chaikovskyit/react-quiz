@@ -1,6 +1,9 @@
 import React from 'react'
 import classes from './Input.module.css'
 
+function isInvalid({valid, touched, shouldValidate}) {
+  return !valid && shouldValidate && touched
+}
 
 const Input = (props) => {
   // створюємо властивість яке оприділятиме якого типу наш <Input/>
@@ -12,9 +15,9 @@ const Input = (props) => {
 
   const htmlFor = `${inputType}-${Math.random()}`
 
-  // if(true) {
-  //   cls.push(classes.invalid)
-  // }
+  if(isInvalid(props)) {
+    cls.push(classes.invalid)
+  }
 
   return (
     <div className={cls.join(' ')}>
@@ -25,7 +28,12 @@ const Input = (props) => {
         value={props.value}
         onChange={props.onChange}
       />
-      <span>{props.errorMessage}</span>
+      {
+        isInvalid(props)
+          ? <span>{props.errorMessage}</span>
+          : null
+      }
+      
     </div>
   )
 }
