@@ -62,9 +62,58 @@ class Auth extends Component {
   submitHandler = (event) => {
     event.preventDefault()
   }
+  // Передаємо value, і набір параметрів validation
+  validateControl(value, validation) {
+    // якщо ми у функцію не передали набору параметрів, значить нічого не треба валідувати
+    if(!validation) {
+      return true
+    }
+    // А якщо перевірка не пройшла і ми оприділили змінну  validation то створюєм змінну isValid яка по замовчуванні буде дорівнювати true, після перевірок ми її повернемо
+    let isValid = true
+    // Тепер на основі обєкта конфігурації validation ми будемо змінювати локальну змінну isValid
+
+    // Валідуємо на пустоту поля
+    if(validation.required) {
+      // для того щоб перевірити що знаходиться в полі вводу, ми звертаємось до value, також ми знаємо що це стрінг тому ми можемо скористуватись методом trim(який почистить зайві пробіли і якщо це все не дорівнює пустій стрінзі то isValid === true) 
+      isValid = value.trim() !== '' && isValid
+    }
+    // Валідуємо на емейл
+    if(validation.email) {
+
+    }
+
+    // Валідуємо на довжину паролю
+    // Якщо value.length більше або рівне заданомумінімальному  значенні довжини  в стейті то isValid === true 
+    if(validation.minLength) {
+        isValid = value.length >= validation.minLength && isValid
+    }
+
+    return isValid
+  }
 
   onChangeHandler = (event, controlName) => {
     console.log(`${controlName}: `, event.target.value);
+    
+    // Копія нашого стейту, тепер її можна змінювати і не переживати 
+    const formControls = {...this.state.formControls}
+    // Копія контролу, 
+    const control = {...formControls[controlName]}
+
+    // В змінну контрол переоприділяємо всі значення control це або password або email
+    // Міняємо значення value
+    control.value = event.target.value
+    // перевіряємо валідність нашого input
+    // як тільки ми попали в зміну даного input це означає що користувач вже щось ввів
+    control.touched = true
+    // Перевіряємо чи валідний наш control(тобто чи правильно заповнене поле password або email) control.value це вже змінене значення, а control.validation це обєкт в якому є умови валідності
+    control.valid = this.validateControl(control.value, control.validation)
+    // тепер у змінній control  у нас лежать нові значення і нам треба обновити локальну копію formControls по імені controlName(controlName відповідає за назву control це або email або password) control в свою чергу це вже конкретний інпут або email або password
+    formControls[controlName] = control
+    // після проведених маніпуляцій нам потрібно змінити state
+    this.setState({
+      formControls: formControls
+    })
+
   }
 
   // Функція яка рендерить компоненти <Input /> за допомогою методу map(), та передає в неї параметри
