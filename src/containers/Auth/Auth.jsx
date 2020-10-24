@@ -10,6 +10,8 @@ import is from 'is_js'
 class Auth extends Component {
 
   state = { 
+    // параметр для загальної валідації форми, його треба змінювати тоді коли ми щось вписуємо в input, параметр буде відповідати за активність кнопок, тобто доки поля будуть не заповнені кнопки будуть не активними
+    isFormValid: false,
     // для зручнішого маніпулювання огорнемо наші обєкти у змінну formControls 
     formControls: {
       // такий собі controlName
@@ -95,7 +97,6 @@ class Auth extends Component {
 
   onChangeHandler = (event, controlName) => {
     console.log(`${controlName}: `, event.target.value);
-    
     // Копія нашого стейту, тепер її можна змінювати і не переживати 
     const formControls = {...this.state.formControls}
     // Копія контролу, 
@@ -111,9 +112,18 @@ class Auth extends Component {
     control.valid = this.validateControl(control.value, control.validation)
     // тепер у змінній control  у нас лежать нові значення і нам треба обновити локальну копію formControls по імені controlName(controlName відповідає за назву control це або email або password) control в свою чергу це вже конкретний інпут або email або password
     formControls[controlName] = control
+
+    // по замовчуванні true стан валідності форми
+    let isFormValid = true
+    // тепер ми маємо пробігтись по усіх обєктах обєкта formControls і запитати у кожного чи він валідний
+    Object.keys(formControls).forEach((name) => {
+      isFormValid = formControls[name].valid && isFormValid
+    })
+
     // після проведених маніпуляцій нам потрібно змінити state
     this.setState({
-      formControls: formControls
+      formControls: formControls,
+      isFormValid: isFormValid
     })
 
   }
@@ -155,6 +165,7 @@ class Auth extends Component {
               type="success"
               // Функція логінізації яка викликатиметься при кліку на кнопку
               onClick={this.loginHandler}
+              disabled={!this.state.isFormValid}
             >
               Вхід
             </Button>
@@ -162,6 +173,7 @@ class Auth extends Component {
               type="primary"
               // Функція яка реєстрації викликатиметься при кліку на кнопку
               onClick={this.registerHandler}
+              disabled={!this.state.isFormValid}
             >
               Зареєструватись
             </Button>
