@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import classes from './Auth.module.css'
 import Button from  '../components/UI/Button/Button'
 import Input from '../components/UI/Input/Input'
+import is from 'is_js'
+
 
 // компонент який відповідає за авторизацію
 
@@ -79,7 +81,7 @@ class Auth extends Component {
     }
     // Валідуємо на емейл
     if(validation.email) {
-
+      isValid = is.email(value) && isValid
     }
 
     // Валідуємо на довжину паролю
