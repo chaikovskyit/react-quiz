@@ -31,7 +31,6 @@ function createFormControls() {
     option4: createOptionControl(4),
   }
 }
-
 // Тут генеруємо нові тести 
 class QuizCreator extends Component {
   // створюємо state де ми опишемо всі поля
@@ -41,7 +40,6 @@ class QuizCreator extends Component {
     // це обєкт який містить поле для вводу "питання" та 4 поля вводу варіантів "відповіді"
     formControls: createFormControls()
   }
-
   // Метод який відмінює стандартну паведінку <form/>
   submitHandler = (event) => {
     event.preventDefault()
@@ -58,11 +56,12 @@ class QuizCreator extends Component {
   changeHandler = (value, controlName) => {
     
   }
-
+  // Метод який рендерить <Input/> з параметрами. Залежить від state
   renderControls() {
-    return Object.keys(this.state.formControls).map((controlName, index) =>{
+    // за допомогою оператора Object.keys ми отримуємо набір ключів (question, option1 - option4) далі оператором map() 
+    return Object.keys(this.state.formControls).map((controlName, index) => {
+      // control це або question, або option1 - option4
       const control = this.state.formControls[controlName]
-
       return (
         <Auxiliary key={controlName + index}>
           <Input
@@ -74,23 +73,21 @@ class QuizCreator extends Component {
             errorMessage={control.errorMessage}
             onChange={event => this.changeHandler(event.target.value, controlName)}
           />
+          {/* Для того щоб відділити питання від відповідей використовуємо <hr/> і ось таку перевірку */}
           { index === 0 ? <hr/> : null }
         </Auxiliary>
-        
       )
     })
   }
-
+  
   render(){
     return(
       <div className={classes.QuizCreator}>
         <div>
           <h1>Створення вікторини</h1>
-
           <form onSubmit={this.submitHandler}>
-            {/* Ініціалізуємо наші "input" */}
+            {/* Рендеремо наші <Input/> */}
             {this.renderControls()}
-
             <select></select>
             <Button
               type="primary"
