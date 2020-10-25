@@ -1,34 +1,45 @@
 import React, {Component} from 'react'
 import classes from './QuizCreator.module.css'
 import Button from '../../containers/components/UI/Button/Button'
+// імпортуємо метод
 import {createControl} from '../../form/formFramework'
+import Input from '../../containers/components/UI/Input/Input'
+import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
 
+// Функція яка допомагає зменшити написання коду, тобто для того щоб описати варіанти відповіді і не писати все в ручну створена функція яка буде повертати обєкт варіанта відповіді з готовими параметрами залишеться просто викликати її і передавати їй в якості параметра порядковий номер 
 function createOptionControl(number) {
   return createControl({
-    label: `Варіант відповіді  ${number}`,
-    errorMessage: 'Значення не може бути пустим',
+    label: `Варіант ${number}`,
+    errorMessage: 'Значення не можу бути пустим',
     id: number
-  }, {required: true})
+  },{required: true})
 }
 
-function createFormControl() {
+// Коли ми додаємо нове питання нам потрібно оновлювати стейт, і обнуляти його, тому ми створюємо цю функцію яку просто передаємо в наш "state" в поле "formControls"
+function createFormControls() {
   return {
+    // для поля "question" викликаємо метод "createControl(config, validation)" (він повертає обєкт), а для поля "question" ми просто витягуємо потрібні нам ключі це параметр "config", другим параметром передаємо набір валідацій "validation"
     question: createControl({
-      label: 'Введіть питання',
-      errorMessage: 'Питання не може бути пустим'
-    }, {required: true}),
+      label: 'Введіть запитання',
+      errorMessage: "Питання не може бути пустим"
+      // Це другий параметр методу "createControl()" який передає набір валідацій, в конкретному випадку ми дивимось за тим щоб поле не було пустим
+    },{required: true}),
+    // використовуємо метод "createOptionControl(number)" який під капотом повертає обєкт з потрібними нам ключами, нам залишається в якості параметра передавати йому лише порядковий номер. Це зроблено для того що не викликати кожен раз "createControl" і передавати їй вагон одинакових параметрів, бо "createOptionControl()" під капотом вже містить функцію "createControl" з прописаними потрібними нам параметрами
     option1: createOptionControl(1),
     option2: createOptionControl(2),
     option3: createOptionControl(3),
-    option4: createOptionControl(4)
+    option4: createOptionControl(4),
   }
 }
+
 // Тут генеруємо нові тести 
 class QuizCreator extends Component {
-
-  state ={
+  // створюємо state де ми опишемо всі поля
+  state = {
+    // створюємо порожній масив, де в подальшому будуть зберігатисься усі наші запитання, які будуть добавлятись сюди за допомогою addQuestionHandler()
     quiz: [],
-    formControls: createFormControl()
+    // це обєкт який містить поле для вводу "питання" та 4 поля вводу варіантів "відповіді"
+    formControls: createFormControls()
   }
 
   // Метод який відмінює стандартну паведінку <form/>
@@ -44,8 +55,30 @@ class QuizCreator extends Component {
 
   }
 
-  renderControls() {
+  changeHandler = (value, controlName) => {
     
+  }
+
+  renderControls() {
+    return Object.keys(this.state.formControls).map((controlName, index) =>{
+      const control = this.state.formControls[controlName]
+
+      return (
+        <Auxiliary key={controlName + index}>
+          <Input
+            label={control.label}
+            value={control.value}
+            valid={control.valid}
+            shouldValidate={!!control.validation}
+            touched={control.touched}
+            errorMessage={control.errorMessage}
+            onChange={event => this.changeHandler(event.target.value, controlName)}
+          />
+          { index === 0 ? <hr/> : null }
+        </Auxiliary>
+        
+      )
+    })
   }
 
   render(){
@@ -55,8 +88,8 @@ class QuizCreator extends Component {
           <h1>Створення вікторини</h1>
 
           <form onSubmit={this.submitHandler}>
-
-            {this.renderControls}
+            {/* Ініціалізуємо наші "input" */}
+            {this.renderControls()}
 
             <select></select>
             <Button
