@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import classes from './QuizCreator.module.css'
 import Button from '../../containers/components/UI/Button/Button'
 // імпортуємо метод
-import {createControl} from '../../form/formFramework'
+import {createControl, validate, validateForm} from '../../form/formFramework'
 import Input from '../../containers/components/UI/Input/Input'
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
 import Select from '../components/UI/Select/Select'
@@ -38,6 +38,8 @@ class QuizCreator extends Component {
   state = {
     // створюємо порожній масив, де в подальшому будуть зберігатисься усі наші запитання, які будуть добавлятись сюди за допомогою addQuestionHandler()
     quiz: [],
+    // стан форми
+    isFormValid: false,
     // поле де зберігається правельна відповідь, по замовчуванні це 1
     rightAnswerId: 1,
     // це обєкт який містить поле для вводу "питання" та 4 поля вводу варіантів "відповіді"
@@ -48,8 +50,9 @@ class QuizCreator extends Component {
     event.preventDefault()
   }
 
-  addQuestionHandler = () => {
-
+  // забераємо стандартну перевірку для того щоб сторінка при натисканні не оновлювалась 
+  addQuestionHandler = (event) => {
+    event.preventDefault()
   }
 
   createQuizHandler = () => {
@@ -57,6 +60,29 @@ class QuizCreator extends Component {
   }
 
   changeHandler = (value, controlName) => {
+    // Копія нашого стейту, тепер її можна змінювати і не переживати 
+    const formControls = {...this.state.formControls}
+    // Копія контролу, 
+    const control = {...formControls[controlName]}
+    // true бо ми щось змінили
+    control.touched = true
+    // змінюємо на value яке ми отримуємо в дану функцію
+    control.value = value
+    // оприділяємо з функції яку створили у фреймворку
+    control.valid = validate(control.value, control.validation)
+    // в локальну копію стейту "formControls" нам треба внести оновлене значення "control" по імені "controlName"
+    formControls[controlName] = control
+    // Після цього нам потрібно перевірити стан нашої форми, для цього в "state" створюємо поле "isFormValid" де по замовчуванні воно має значення "false"
+
+    // тепер ми звертаємось до методу "setState"
+    this.setState({
+      // оприділяємо нові оновлені "formControls"
+      formControls,
+      // 
+      isFormValid: validateForm(formControls)
+    })
+
+
     
   }
   // Метод який рендерить <Input/> з параметрами. Залежить від state
@@ -119,12 +145,15 @@ class QuizCreator extends Component {
             <Button
               type="primary"
               onClick={this.addQuestionHandler}
+              // додаємо властивість "disabled" для того щоб кнопки стали активні тільки тоді коли форма буде повністю валідна тобто
+              disabled={!this.state.isFormValid}
             >
               Додати питання
             </Button>
             <Button
               type="success"
               onClick={this.createQuizHandler}
+              disabled={this.state.quiz.length === 0}
             >
               Створити Вікторину
             </Button>
