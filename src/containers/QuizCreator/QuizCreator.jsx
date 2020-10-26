@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import classes from './QuizCreator.module.css'
-import Button from '../../containers/components/UI/Button/Button'
+import Button from '../../components/UI/Button/Button'
 // імпортуємо метод
 import {createControl, validate, validateForm} from '../../form/formFramework'
-import Input from '../../containers/components/UI/Input/Input'
+import Input from '../../components/UI/Input/Input'
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
-import Select from '../components/UI/Select/Select'
+import Select from '../../components/UI/Select/Select'
 
 // Функція яка допомагає зменшити написання коду, тобто для того щоб описати варіанти відповіді і не писати все в ручну створена функція яка буде повертати обєкт варіанта відповіді з готовими параметрами залишеться просто викликати її і передавати їй в якості параметра порядковий номер 
 function createOptionControl(number) {
@@ -82,7 +82,8 @@ class QuizCreator extends Component {
     this.setState({
       // оновлюємо значення масиву в "state"
       quiz: quiz,
-      // обнуляємо "state" тобто задаємо йому початкове значення, і можливість користувачу створити нове запитання!
+      // обнуляємо "state" тобто задаємо йому початкове значення, і можливість користувачу створити нове запитання
+
       isFormValid: false,
       rightAnswerId: 1,
       formControls: createFormControls()
