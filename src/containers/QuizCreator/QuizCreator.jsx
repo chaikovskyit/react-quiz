@@ -5,6 +5,7 @@ import Button from '../../containers/components/UI/Button/Button'
 import {createControl} from '../../form/formFramework'
 import Input from '../../containers/components/UI/Input/Input'
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
+import Select from '../components/UI/Select/Select'
 
 // Функція яка допомагає зменшити написання коду, тобто для того щоб описати варіанти відповіді і не писати все в ручну створена функція яка буде повертати обєкт варіанта відповіді з готовими параметрами залишеться просто викликати її і передавати їй в якості параметра порядковий номер 
 function createOptionControl(number) {
@@ -37,6 +38,8 @@ class QuizCreator extends Component {
   state = {
     // створюємо порожній масив, де в подальшому будуть зберігатисься усі наші запитання, які будуть добавлятись сюди за допомогою addQuestionHandler()
     quiz: [],
+    // поле де зберігається правельна відповідь, по замовчуванні це 1
+    rightAnswerId: 1,
     // це обєкт який містить поле для вводу "питання" та 4 поля вводу варіантів "відповіді"
     formControls: createFormControls()
   }
@@ -79,8 +82,30 @@ class QuizCreator extends Component {
       )
     })
   }
-  
+
+  // Метод для вказування правильної відповіді
+  selectChangeHandler = (event) => {
+    this.setState({
+      // результатом має бути число, тому додаємо + перед кодом
+      rightAnswerId: +event.target.value
+    })
+  }
+
   render(){
+    // Окремо створюємо select і будемо просто вставляти його в jsx
+    const select = <Select
+      label="Виберіть правельну відповідь"
+      value={this.state.rightAnswerId}
+      onChange={this.selectChangeHandler}
+      // те що буде відображатись коли ми розгортаємо "select"
+      options={[
+        {text: 1, value: 1},
+        {text: 2, value: 2},
+        {text: 3, value: 3},
+        {text: 4, value: 4}
+      ]}
+    />
+
     return(
       <div className={classes.QuizCreator}>
         <div>
@@ -88,7 +113,9 @@ class QuizCreator extends Component {
           <form onSubmit={this.submitHandler}>
             {/* Рендеремо наші <Input/> */}
             {this.renderControls()}
-            <select></select>
+            {/* виводимо вище створений "select" */}
+            { select }
+
             <Button
               type="primary"
               onClick={this.addQuestionHandler}
