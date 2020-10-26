@@ -50,13 +50,50 @@ class QuizCreator extends Component {
     event.preventDefault()
   }
 
-  // забераємо стандартну перевірку для того щоб сторінка при натисканні не оновлювалась 
+  // забераємо стандартну перевірку для того щоб сторінка при натисканні не оновлювалась.
   addQuestionHandler = (event) => {
     event.preventDefault()
+    // локальна копія "state" за допомогою методу "concat()" який дасть нам копію масиву і захистить нас від мутації
+    const quiz = this.state.quiz.concat()
+    // індекс який нам пригодиться для "id"
+    const index = quiz.length + 1
+
+    // чудо деструкторизація для того щоб не писати ось так --- "question: this.state.formControls.question.value" можна напимати ось так "question: question.value"
+    const {question, option1, option2, option3, option4} = this.state.formControls
+
+    // Формуєбо обєкт кожного з питань і пхаємо його в масив "quiz"
+    const questionItem = {
+      // питання
+      question: question.value,
+      id: index,
+      // правельна відповідь
+      rightAnswerId: this.state.rightAnswerId,
+      // список варіантів відповідей
+      answers: [
+        { text: option1.value, id: option1.id },
+        { text: option2.value, id: option2.id },
+        { text: option3.value, id: option3.id },
+        { text: option4.value, id: option4.id }
+      ]
+    }
+    // сформований обєкт  "questionItem" добавляємо в клонований масив "quiz"
+    quiz.push(questionItem)
+    // змінюємо стан "state"
+    this.setState({
+      // оновлюємо значення масиву в "state"
+      quiz: quiz,
+      // обнуляємо "state" тобто задаємо йому початкове значення, і можливість користувачу створити нове запитання!
+      isFormValid: false,
+      rightAnswerId: 1,
+      formControls: createFormControls()
+    })
   }
 
-  createQuizHandler = () => {
+  createQuizHandler = (event) => {
+    event.preventDefault()
 
+    console.log(this.state.quiz);
+    // TODO: Server
   }
 
   changeHandler = (value, controlName) => {
