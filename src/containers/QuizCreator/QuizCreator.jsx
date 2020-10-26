@@ -6,6 +6,7 @@ import {createControl, validate, validateForm} from '../../form/formFramework'
 import Input from '../../components/UI/Input/Input'
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
 import Select from '../../components/UI/Select/Select'
+import axios from 'axios'
 
 // Функція яка допомагає зменшити написання коду, тобто для того щоб описати варіанти відповіді і не писати все в ручну створена функція яка буде повертати обєкт варіанта відповіді з готовими параметрами залишеться просто викликати її і передавати їй в якості параметра порядковий номер 
 function createOptionControl(number) {
@@ -90,11 +91,21 @@ class QuizCreator extends Component {
     })
   }
 
-  createQuizHandler = (event) => {
+  createQuizHandler = async (event) => {
     event.preventDefault()
 
-    console.log(this.state.quiz);
-    // TODO: Server
+    try {
+      const response = await axios.post('https://react-quiz-52bd0.firebaseio.com/quizes.json', this.state.quiz)
+      console.log(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+
+    // axios.post('https://react-quiz-52bd0.firebaseio.com/quizes.json', this.state.quiz)
+    //   .then(response => {
+    //     console.log(response)
+    //   })
+    //   .catch(error => console.log(error)) 
   }
 
   changeHandler = (value, controlName) => {
