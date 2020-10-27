@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { NavLink } from 'react-router-dom'
 import classes from './QuizList.module.css'
-import axios from 'axios'
+import axios from '../../axios/axios-quiz'
 import Loader from '../../components/UI/Loader/Loader'
 
 // Компонент який відповідає за список доступних тестів і навігацію між ними
@@ -34,7 +34,7 @@ class QuizList extends Component {
   async componentDidMount() {
     try {
       // cтворюємо змінну " response ", І в ній звертаємось до axios і кажемо нас цікавить метод "get"(дай мені те що лежить на сервері в файлі "quizes.json" )
-      const response = await axios.get('https://react-quiz-52bd0.firebaseio.com/quizes.json')
+      const response = await axios.get('/quizes.json')
       // локальна змінна (масив) в який ми додаємо тести
       const quizes = []
       // дивимось що ми отримуємо з сервера, в "response.data" ми отримуємо обєкт в якому ключі являються "id" потрібного нам тесту "Quiz ID =  -MKdlqBUmPaSFmlAfe6F" з його даними. Тепер нам просто потрібно переформатувати дані в той формат який нам підходить.

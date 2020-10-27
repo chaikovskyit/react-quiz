@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import ActiveQuiz from '../../components/ActiveQuiz/ActiveQuiz'
 import classes from './Quiz.module.css'
 import FinishedQuiz from '../../components/FinishedQuiz/FinishedQuiz'
+import axios from '../../axios/axios-quiz'
+import Loader from '../../components/UI/Loader/Loader'
 
 
 class Quiz extends Component {
@@ -15,37 +17,39 @@ class Quiz extends Component {
     activeQuestion: 0,
     // Зберігає інформацію про поточний клік користувача(відповідь або правильна або неправильна {[id]: 'success' 'error'}  )
     answerState: null,
+    // добавляємо стан лоадера
+    loading: true,
     quiz: [
-      {
-        // Питання 
-        question: 'Що таке ReactJS',
-        // id правельної відповіді
-        rightAnswerId: 2,
-        // id запитання, тобто порядковий номер запитання
-        id: 1,
-        // Тестові варіанти відповідей з id для зручності маніпуляцій з ними
-        answers: [
-          {text: 'Framework', id: 1},
-          {text: 'Бібліотека', id: 2},
-          {text: 'Мова програмування', id: 3},
-          {text: 'Супер Герой', id: 4}
-        ]
-      },
-      {
-        // Питання 
-        question: 'Хто такий Дарт Вейдер',
-        // id правельної відповіді
-        rightAnswerId: 3,
-        // id запитання, тобто порядковий номер запитання
-        id: 2,
-        // Тестові варіанти відповідей з id для зручності маніпуляцій з ними
-        answers: [
-          {text: 'Супер герой', id: 1},
-          {text: 'Yoda', id: 2},
-          {text: 'Енакен Скай Вокер', id: 3},
-          {text: 'Палпатін', id: 4}
-        ]
-      }
+      // {
+      //   // Питання 
+      //   question: 'Що таке ReactJS',
+      //   // id правельної відповіді
+      //   rightAnswerId: 2,
+      //   // id запитання, тобто порядковий номер запитання
+      //   id: 1,
+      //   // Тестові варіанти відповідей з id для зручності маніпуляцій з ними
+      //   answers: [
+      //     {text: 'Framework', id: 1},
+      //     {text: 'Бібліотека', id: 2},
+      //     {text: 'Мова програмування', id: 3},
+      //     {text: 'Супер Герой', id: 4}
+      //   ]
+      // },
+      // {
+      //   // Питання 
+      //   question: 'Хто такий Дарт Вейдер',
+      //   // id правельної відповіді
+      //   rightAnswerId: 3,
+      //   // id запитання, тобто порядковий номер запитання
+      //   id: 2,
+      //   // Тестові варіанти відповідей з id для зручності маніпуляцій з ними
+      //   answers: [
+      //     {text: 'Супер герой', id: 1},
+      //     {text: 'Yoda', id: 2},
+      //     {text: 'Енакен Скай Вокер', id: 3},
+      //     {text: 'Палпатін', id: 4}
+      //   ]
+      // }
     ]
   }
   // Функція яка виводить в консолі id елементу зі списку варіантів по якому був зроблений клік, її передаємо через пропси в сам низ до елементу AnswerItem де вона і викликається.
@@ -111,9 +115,21 @@ class Quiz extends Component {
       results: {},
     })
   }
+  // ?
+  // даємо запит на сервер, для того щоб отримати наші тести
+  async componentDidMount() {
+    try {
+      const response = await axios.get(`/quizes/${this.props.match.params.id}.json`)
+      const quiz = response.data
 
-  componentDidMount() {
-    console.log('Quiz ID = ', this.props.match.params.id);
+      this.setState({
+        quiz: quiz,
+        loading: false
+      })
+    } catch (e) {
+      console.log(e);
+    }
+    
   }
 
   render() {
@@ -122,27 +138,33 @@ class Quiz extends Component {
         <div className={classes.QuizWrapper}>
           <h1>Дайте відповідь на запитання</h1>
 
-          {/* Відповідно до значення state залежить те який компонент ми будемо рендерити, по дефолту ми рендиремо ActiveQuiz, а коли значення в state змінюється на true ми рендиремо FinishedQuiz */}
           {
-            this.state.isFinished
-            ? <FinishedQuiz 
-                // передаємо компонетну значення result яке лежить в state
-                results={this.state.results}
-                quiz={this.state.quiz}
-                // Викликаємо функцію пройти вікторину заново
-                onRetry={this.retryHandler}
-              />
-            : <ActiveQuiz 
-                answers={this.state.quiz[this.state.activeQuestion].answers}
-                question={this.state.quiz[this.state.activeQuestion].question}
-                onAnswerClick={this.onAnswerClickHandler}
-                // Параметр який відповідає загальну кількість запитаня
-                quizLength={this.state.quiz.length}
-                // Параметр який відповідає за номер поточного запитання
-                answerNumber={this.state.activeQuestion + 1}
-                state={this.state.answerState}
-              />
+            this.state.loading
+              ? <Loader />
+              : this.state.isFinished
+                ? <FinishedQuiz 
+                    // передаємо компонетну значення result яке лежить в state
+                    results={this.state.results}
+                    quiz={this.state.quiz}
+                    // Викликаємо функцію пройти вікторину заново
+                    onRetry={this.retryHandler}
+                  />
+                : <ActiveQuiz 
+                    answers={this.state.quiz[this.state.activeQuestion].answers}
+                    question={this.state.quiz[this.state.activeQuestion].question}
+                    onAnswerClick={this.onAnswerClickHandler}
+                    // Параметр який відповідає загальну кількість запитаня
+                    quizLength={this.state.quiz.length}
+                    // Параметр який відповідає за номер поточного запитання
+                    answerNumber={this.state.activeQuestion + 1}
+                    state={this.state.answerState}
+                  />
+                  // {/* Відповідно до значення state залежить те який компонент ми будемо рендерити, по дефолту ми рендиремо ActiveQuiz, а коли значення в state змінюється на true ми рендиремо FinishedQuiz */}
           }
+
+
+            
+          
         </div>
       </div>
     )

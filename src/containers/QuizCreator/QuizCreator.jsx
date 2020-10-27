@@ -7,7 +7,7 @@ import Input from '../../components/UI/Input/Input'
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
 import Select from '../../components/UI/Select/Select'
 // підключаємо "axios"
-import axios from 'axios'
+import axios from '../../axios/axios-quiz'
 
 // Функція яка допомагає зменшити написання коду, тобто для того щоб описати варіанти відповіді і не писати все в ручну створена функція яка буде повертати обєкт варіанта відповіді з готовими параметрами залишеться просто викликати її і передавати їй в якості параметра порядковий номер 
 function createOptionControl(number) {
@@ -103,7 +103,7 @@ class QuizCreator extends Component {
 
     // Використовуємо синтаксис який не містить багато "callback" функцій. І оскільки ми можемо юзати новий стнтаксис JS ми трохи оптимізуємо наш код. МИ працюємо в функції "createQuizHandler()" і по суті ми можемо зробити її асинхронною, для цього перед самою функцією пишемо "async" 
     try {
-      await axios.post('https://react-quiz-52bd0.firebaseio.com/quizes.json', this.state.quiz)
+      await axios.post('/quizes.json', this.state.quiz)
       // Після того як ми добавили тест на сервер нам потрібно обнулити форму тобто "state"
       this.setState({
         quiz: [],
