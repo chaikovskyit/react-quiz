@@ -6,6 +6,7 @@ import {createControl, validate, validateForm} from '../../form/formFramework'
 import Input from '../../components/UI/Input/Input'
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
 import Select from '../../components/UI/Select/Select'
+// підключаємо "axios"
 import axios from 'axios'
 
 // Функція яка допомагає зменшити написання коду, тобто для того щоб описати варіанти відповіді і не писати все в ручну створена функція яка буде повертати обєкт варіанта відповіді з готовими параметрами залишеться просто викликати її і передавати їй в якості параметра порядковий номер 
@@ -93,19 +94,26 @@ class QuizCreator extends Component {
 
   createQuizHandler = async (event) => {
     event.preventDefault()
-
-    try {
-      const response = await axios.post('https://react-quiz-52bd0.firebaseio.com/quizes.json', this.state.quiz)
-      console.log(response.data);
-    } catch (e) {
-      console.log(e);
-    }
-
+    // пишемо "axios.post" для того щоб створити щось в базі, і сюди ми передаємо адресу яку ми оприділили в "firebase" тобто на сервері. Наша таблиця на сервері буде називатись "quizes.json", і в якості параметра ми задаємо масив який ми сформували до цього в  "state". Тепер нам треба опрацювати відповідь з сервера. "axios" нам поаертає promise, тому ми користуємось методом ".then()" (який каже "коли"). Також використовуємо метод "cath()" який буде ловити помилку
     // axios.post('https://react-quiz-52bd0.firebaseio.com/quizes.json', this.state.quiz)
     //   .then(response => {
     //     console.log(response)
     //   })
     //   .catch(error => console.log(error)) 
+
+    // Використовуємо синтаксис який не містить багато "callback" функцій. І оскільки ми можемо юзати новий стнтаксис JS ми трохи оптимізуємо наш код. МИ працюємо в функції "createQuizHandler()" і по суті ми можемо зробити її асинхронною, для цього перед самою функцією пишемо "async" 
+    try {
+      await axios.post('https://react-quiz-52bd0.firebaseio.com/quizes.json', this.state.quiz)
+      // Після того як ми добавили тест на сервер нам потрібно обнулити форму тобто "state"
+      this.setState({
+        quiz: [],
+        isFormValid: false,
+        rightAnswerId: 1,
+        formControls: createFormControls()
+      })
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   changeHandler = (value, controlName) => {
