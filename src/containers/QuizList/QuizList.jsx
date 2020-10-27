@@ -2,13 +2,16 @@ import React, {Component} from 'react'
 import { NavLink } from 'react-router-dom'
 import classes from './QuizList.module.css'
 import axios from 'axios'
+import Loader from '../../components/UI/Loader/Loader'
 
 // Компонент який відповідає за список доступних тестів і навігацію між ними
 class QuizList extends Component {
   
   state = {
     // Масив в який з сервера завантажуються наші тести
-    quizes: []
+    quizes: [],
+    // "Loader" буде крутитись по замовчувані, коли загрузка завершиться "Loader" перестане працювати це прописано в "componentDidMount()""
+    loading: true
   }
 
   renderQuizes() {
@@ -48,7 +51,9 @@ class QuizList extends Component {
       })
       // Ми напакували наш локальний масив, тепер проводимо операцію зміни "state"
       this.setState({
-        quizes: quizes
+        quizes: quizes,
+        // зупиняємо лоадер
+        loading: false
       })
       // ловить помилку
     } catch(e) {
@@ -61,9 +66,14 @@ class QuizList extends Component {
       <div className={classes.QuizList}>
         <div>
           <h1>Список тестів</h1>
-          <ul>
-            {this.renderQuizes()}
-          </ul>
+          {/* Виконуємо перевірку, якщо "this.state.loading" тобто якщо йде загрузка то відображаємо <Loader />, "loading: false" то відповідно відображаємо список тестів які ми завантажили з сервера*/}
+          {
+            this.state.loading
+              ? <Loader />
+              : <ul>
+                  {this.renderQuizes()}
+                </ul>
+          }
         </div>
       </div>
     )
