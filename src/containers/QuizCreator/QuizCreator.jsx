@@ -134,7 +134,7 @@ class QuizCreator extends Component {
     // тепер ми звертаємось до методу "setState"
     this.setState({
       // оприділяємо нові оновлені "formControls"
-      formControls,
+      formControls: formControls,
       // 
       isFormValid: validateForm(formControls)
     })
