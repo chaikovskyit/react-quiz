@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import classes from './QuizList.module.css'
 import axios from '../../axios/axios-quiz'
 import Loader from '../../components/UI/Loader/Loader'
+import {connect} from 'react-redux'
 
 // Компонент який відповідає за список доступних тестів і навігацію між ними
 class QuizList extends Component {
@@ -80,4 +81,12 @@ class QuizList extends Component {
   }
 }
 
-export default QuizList
+function mapStateToProps(state) {
+
+}
+
+function mapDispatchToProps() {
+  
+}
+
+export default connect()(QuizList)
