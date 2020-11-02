@@ -7,7 +7,9 @@ import Input from '../../components/UI/Input/Input'
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
 import Select from '../../components/UI/Select/Select'
 // підключаємо "axios"
-import axios from '../../axios/axios-quiz'
+
+import {connect} from 'react-redux'
+import {createQuizQuestion, finishCreateQuiz} from '../../store/actions/create'
 
 // Функція яка допомагає зменшити написання коду, тобто для того щоб описати варіанти відповіді і не писати все в ручну створена функція яка буде повертати обєкт варіанта відповіді з готовими параметрами залишеться просто викликати її і передавати їй в якості параметра порядковий номер 
 function createOptionControl(number) {
@@ -37,9 +39,7 @@ function createFormControls() {
 // Тут генеруємо нові тести 
 class QuizCreator extends Component {
   // створюємо state де ми опишемо всі поля
-  state = {
-    // створюємо порожній масив, де в подальшому будуть зберігатисься усі наші запитання, які будуть добавлятись сюди за допомогою addQuestionHandler()
-    quiz: [],
+  state = {  
     // стан форми
     isFormValid: false,
     // поле де зберігається правельна відповідь, по замовчуванні це 1
@@ -55,11 +55,7 @@ class QuizCreator extends Component {
   // забераємо стандартну перевірку для того щоб сторінка при натисканні не оновлювалась.
   addQuestionHandler = (event) => {
     event.preventDefault()
-    // локальна копія "state" за допомогою методу "concat()" який дасть нам копію масиву і захистить нас від мутації
-    const quiz = this.state.quiz.concat()
-    // індекс який нам пригодиться для "id"
-    const index = quiz.length + 1
-
+    
     // чудо деструкторизація для того щоб не писати ось так --- "question: this.state.formControls.question.value" можна напимати ось так "question: question.value"
     const {question, option1, option2, option3, option4} = this.state.formControls
 
@@ -67,7 +63,7 @@ class QuizCreator extends Component {
     const questionItem = {
       // питання
       question: question.value,
-      id: index,
+      id: this.props.quiz.length + 1,
       // правельна відповідь
       rightAnswerId: this.state.rightAnswerId,
       // список варіантів відповідей
@@ -78,12 +74,9 @@ class QuizCreator extends Component {
         { text: option4.value, id: option4.id }
       ]
     }
-    // сформований обєкт  "questionItem" добавляємо в клонований масив "quiz"
-    quiz.push(questionItem)
+    this.props.createQuizQuestion(questionItem)
     // змінюємо стан "state"
-    this.setState({
-      // оновлюємо значення масиву в "state"
-      quiz: quiz,
+    this.setState({      
       // обнуляємо "state" тобто задаємо йому початкове значення, і можливість користувачу створити нове запитання
 
       isFormValid: false,
@@ -92,18 +85,10 @@ class QuizCreator extends Component {
     })
   }
 
-  createQuizHandler = async (event) => {
+  createQuizHandler = (event) => {
     event.preventDefault()
-    // пишемо "axios.post" для того щоб створити щось в базі, і сюди ми передаємо адресу яку ми оприділили в "firebase" тобто на сервері. Наша таблиця на сервері буде називатись "quizes.json", і в якості параметра ми задаємо масив який ми сформували до цього в  "state". Тепер нам треба опрацювати відповідь з сервера. "axios" нам поаертає promise, тому ми користуємось методом ".then()" (який каже "коли"). Також використовуємо метод "cath()" який буде ловити помилку
-    // axios.post('https://react-quiz-52bd0.firebaseio.com/quizes.json', this.state.quiz)
-    //   .then(response => {
-    //     console.log(response)
-    //   })
-    //   .catch(error => console.log(error)) 
-
-    // Використовуємо синтаксис який не містить багато "callback" функцій. І оскільки ми можемо юзати новий стнтаксис JS ми трохи оптимізуємо наш код. МИ працюємо в функції "createQuizHandler()" і по суті ми можемо зробити її асинхронною, для цього перед самою функцією пишемо "async" 
-    try {
-      await axios.post('/quizes.json', this.state.quiz)
+    
+      
       // Після того як ми добавили тест на сервер нам потрібно обнулити форму тобто "state"
       this.setState({
         quiz: [],
@@ -111,9 +96,7 @@ class QuizCreator extends Component {
         rightAnswerId: 1,
         formControls: createFormControls()
       })
-    } catch (e) {
-      console.log(e);
-    }
+      this.props.finishCreateQuiz()
   }
 
   changeHandler = (value, controlName) => {
@@ -210,7 +193,7 @@ class QuizCreator extends Component {
             <Button
               type="success"
               onClick={this.createQuizHandler}
-              disabled={this.state.quiz.length === 0}
+              disabled={this.props.quiz.length === 0}
             >
               Створити Вікторину
             </Button>
@@ -221,4 +204,18 @@ class QuizCreator extends Component {
   }
 }
 
-export default QuizCreator
+function mapStateToProps(state) {
+  return {
+    quiz: state.create.quiz
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    createQuizQuestion: item => dispatch(createQuizQuestion(item)),
+    finishCreateQuiz: () => dispatch(finishCreateQuiz())
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(QuizCreator)

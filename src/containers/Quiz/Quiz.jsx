@@ -43,7 +43,7 @@ class Quiz extends Component {
                     answerNumber={this.props.activeQuestion + 1}
                     state={this.props.answerState}
                   />
-                  // {/* Відповідно до значення state залежить те який компонент ми будемо рендерити, по дефолту ми рендиремо ActiveQuiz, а коли значення в state змінюється на true ми рендиремо FinishedQuiz */}
+                  
           }
         </div>
       </div>
