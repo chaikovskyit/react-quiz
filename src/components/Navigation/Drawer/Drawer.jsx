@@ -3,21 +3,12 @@ import classes from './Drawer.module.css'
 import Backdrop from '../../UI/Backdrop/Backdrop'
 import {NavLink} from 'react-router-dom'
 
-// тимчасові лінки для виводу в nav
-const links = [
-  {to: '/', label: 'Список', exact: true},
-  {to: '/auth', label: 'Авторизація', exact: false},
-  {to: '/quiz-creator', label: 'Створити тест', exact: false}
-]
 
 class Drawer extends Component {
-  // Функція яка відповідає за закривання Drawer при кліку на лінк
   clickHandler = () => {
     this.props.onClose()
   }
-
-  // Проходимось методом map() по нашому масиву links, і видаємо новий масив <li/>, з елементом масиву links, та індексом. Замість тегу <a/> використовуємо компонент <NavLink/> для того щоб при переході між посиланнями сторінка не перезавантажувалась, а просто перемальовувалась компонента яка вказана у компоненті <Route />
-  renderLinks() {
+  renderLinks(links) {
     return links.map((link, index) => {
       return (
         <li key={index}>
@@ -41,13 +32,24 @@ class Drawer extends Component {
       cls.push(classes.close)
     }
 
+    const links = [
+      {to: '/', label: 'Список', exact: true},
+      
+    ]
+    if (this.props.isAuthenticated) {
+      links.push({to: '/quiz-creator', label: 'Створити тест', exact: false})
+      links.push({to: '/logout', label: 'Вийти', exact: false})
+    } else {
+      links.push({to: '/auth', label: 'Авторизація', exact: false})
+    }
+
     return (
       <React.Fragment>
         {/* Тут знаходяться усі наші навігаційні ссилки */}
         <nav className={cls.join(' ')}>
           <ul>
             {/* метод який буде виводити наші лінки */}
-            {this.renderLinks()}
+            {this.renderLinks(links)}
           </ul>
 
         </nav>
